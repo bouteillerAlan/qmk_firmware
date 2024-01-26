@@ -1,10 +1,10 @@
 {
-    "keyboard_name": "Corne",
+    "keyboard_name": "A2N-CORNE",
     "manufacturer": "foostan",
     "url": "",
     "maintainer": "qmk",
     "usb": {
-        "vid": "0x4653",
+        "vid": "0x4142",
         "pid": "0x0001",
         "device_version": "0.0.1"
     },

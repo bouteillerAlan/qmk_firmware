@@ -46,21 +46,27 @@ static void oled_render_layer_state(void) {
     oled_write_P(PSTR("Layer: "), false);
     switch (get_highest_layer(layer_state)) {
         case 0:
-            oled_write_ln_P(PSTR("Default"), false);
+            oled_write_ln_P(PSTR("Key"), false);
             break;
         case 1:
-            oled_write_ln_P(PSTR("Lower"), false);
+            oled_write_ln_P(PSTR("Num"), false);
             break;
         case 2:
-            oled_write_ln_P(PSTR("Raise"), false);
+            oled_write_ln_P(PSTR("Char"), false);
             break;
         case 3:
-            oled_write_ln_P(PSTR("Adjust"), false);
+            oled_write_ln_P(PSTR("Stg"), false);
             break;
         default:
             oled_write_ln_P(PSTR("Undef"), false);
             break;
     }
+}
+
+static void oled_custom_wpm(void) {
+	oled_write_P(PSTR("WPM: "), false);
+    oled_write(get_u8_str(get_current_wpm(), '0'), false);
+	oled_write_ln_P(PSTR(""), false);
 }
 
 char     key_name = ' ';
@@ -147,6 +153,7 @@ bool oled_task_kb(void) {
     }
     if (is_keyboard_master()) {
         oled_render_layer_state();
+		oled_custom_wpm();
         oled_render_keylog();
     } else {
         oled_render_logo();
