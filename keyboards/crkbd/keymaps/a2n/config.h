@@ -49,11 +49,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #define RGBLIGHT_VAL_STEP 17
 #endif
 
-#ifdef RGBLIGHT_ENABLE
-    #define ENABLE_RGB_MATRIX_PIXEL_FRACTAL
-#endif
-
 #ifdef OLED_ENABLE
     #define OLED_TIMEOUT 60000
     #define OLED_FADE_OUT
+	#define OLED_FONT_H "keyboards/crkbd/glcdfont.c"
 #endif
