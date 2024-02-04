@@ -3,7 +3,6 @@
 #
 
 DEFAULT_FOLDER = crkbd/rev1
-BOOTLOADER = atmel-dfu
 
 RGBLIGHT_SUPPORTED = yes
 RGB_MATRIX_SUPPORTED = yes

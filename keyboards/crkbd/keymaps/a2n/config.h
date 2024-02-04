@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef OLED_ENABLE
 #   define OLED_TIMEOUT 60000
 #   define OLED_FADE_OUT
+#   define OLED_UPDATE_INTERVAL 100
 #endif
 
 // define my custom font
