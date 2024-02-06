@@ -1,4 +1,5 @@
 #include "quantum.h"
+#include "graph.h"
 
 #define WPM_HISTORY_LENGTH 10 // Adjustable history length
 #define MAX_WPM 100 // Maximum WPM value for scaling
@@ -19,7 +20,8 @@ void oled_write_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool color)
     int dx = abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
     int dy = -abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
     int err = dx + dy, e2;
-    for (;;) {
+
+    for (;;) { // infinite loop
         oled_write_pixel(x0, y0, color);
         if (x0 == x1 && y0 == y1) break;
         e2 = 2 * err;
@@ -28,19 +30,38 @@ void oled_write_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool color)
     }
 }
 
-// Function to draw the WPM history graph
-void draw_wpm_graph(void) {
+// Function to clear the area where the WPM graph is drawn
+void clear_wpm_graph(void) {
+    // Define the coordinates of the area where the graph is drawn
+    uint8_t graph_bottom = OLED_HEIGHT - 1;  // Bottom Y coordinate of the graph
+    uint8_t graph_top = graph_bottom - GRAPH_HEIGHT + 1; // Top Y coordinate of the graph
+
+    // Loop through the specified rectangle and clear pixels to turn them off (false)
+    for (uint8_t x = 0; x < OLED_WIDTH; x++) {
+        for (uint8_t y = graph_top; y <= graph_bottom; y++) {
+            // Clear the pixel at (x, y) by setting it to false (off)
+            oled_write_pixel(x, y, false);
+        }
+    }
+}
+
+// Function to draw the WPM history graph with scrolling direction
+void draw_wpm_graph(bool scrollRight) {
     uint8_t graph_bottom = OLED_HEIGHT - 1; // Bottom Y coordinate of the graph
-    uint8_t point_spacing = OLED_WIDTH / (WPM_HISTORY_LENGTH - 1); // Spacing between points
+    uint8_t point_spacing = OLED_WIDTH / WPM_HISTORY_LENGTH; // Spacing between points
+    uint8_t x_offset = scrollRight ? OLED_WIDTH : 0; // Start from the appropriate edge
+
+    // Clear the graph area before drawing
+    clear_wpm_graph();
 
     for (uint8_t i = 0; i < WPM_HISTORY_LENGTH - 1; i++) {
         // Scale the WPM value to the graph height
         uint8_t y0 = graph_bottom - (wpm_history[i] * GRAPH_HEIGHT / MAX_WPM);
         uint8_t y1 = graph_bottom - (wpm_history[i + 1] * GRAPH_HEIGHT / MAX_WPM);
 
-        // Calculate the X coordinates
-        uint8_t x0 = i * point_spacing;
-        uint8_t x1 = (i + 1) * point_spacing;
+        // Calculate the X coordinates based on the scrolling direction
+        uint8_t x0 = scrollRight ? (x_offset - (i * point_spacing)) : (x_offset + (i * point_spacing));
+        uint8_t x1 = scrollRight ? (x_offset - ((i + 1) * point_spacing)) : (x_offset + ((i + 1) * point_spacing));
 
         // Draw the line between the current and next point
         oled_write_line(x0, y0, x1, y1, true); // true for color (on), assuming a monochrome display
@@ -50,5 +71,5 @@ void draw_wpm_graph(void) {
 // Main function to be called from oled_task_kb to update and draw the WPM graph
 void render_wpm_graph(void) {
     update_wpm_history(get_current_wpm());
-    draw_wpm_graph();
+    draw_wpm_graph(true);
 }

@@ -49,7 +49,6 @@ oled_rotation_t oled_init_kb(oled_rotation_t rotation) {
     if (is_keyboard_master()) {
         return OLED_ROTATION_270;
     } else {
-		//return OLED_ROTATION_180;
 		return OLED_ROTATION_270;
 	}
     return rotation;
@@ -295,11 +294,10 @@ bool oled_task_kb(void) {
         render_spacer();
         oled_render_keylog();
         render_spacer();
-
         render_wpm_graph();
-
     } else {
 		render_anim();
+        render_wpm_graph();
     }
     return false;
 }
