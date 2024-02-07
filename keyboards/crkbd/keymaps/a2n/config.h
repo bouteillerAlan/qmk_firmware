@@ -22,6 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MASTER_LEFT
 // #define EE_HANDS
 
+#define SPLIT_WPM_ENABLE // enable the data to be shared between master and slave part of the keyboard, for cosmetic use
+#define SPLIT_OLED_ENABLE
+
 #ifdef OLED_ENABLE
 #   define OLED_TIMEOUT 60000
 #   define OLED_FADE_OUT

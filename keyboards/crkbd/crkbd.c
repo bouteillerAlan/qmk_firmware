@@ -294,7 +294,6 @@ bool oled_task_kb(void) {
         render_spacer();
         oled_render_keylog();
         render_spacer();
-        render_wpm_graph();
     } else {
 		render_anim();
         render_wpm_graph();
