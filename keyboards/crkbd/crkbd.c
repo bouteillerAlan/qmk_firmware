@@ -281,13 +281,43 @@ static void render_anim(void) {
     c_frame = c_frame+1 > IDLE_FRAMES ? 0 : c_frame+1;
 }
 
+// Function to check if Caps Lock is active
+bool is_caps_lock_active(void) {
+    return (host_keyboard_led_state().caps_lock);
+}
+
+// Function to check if Num Lock is active
+bool is_num_lock_active(void) {
+    return (host_keyboard_led_state().num_lock);
+}
+
+static void show_keystatus(void) {
+    static const char PROGMEM caps_lock[] = {0x20, 0x20, 0x7F, 0x20, 0x20, 0};
+    static const char PROGMEM num_lock[] = {0x20, 0x20, 0x23, 0x20, 0x20, 0};
+    static const char PROGMEM caps_num_lock[] = {0x20, 0x7F, 0x23, 0x20, 0x20, 0};
+    static const char PROGMEM void_line[] = {0x20, 0x20, 0x20, 0x20, 0x20, 0};
+
+    oled_write_P(void_line, false);
+    if (is_caps_lock_active() && is_num_lock_active()) oled_write_P(caps_num_lock, false);
+    else if (is_caps_lock_active()) oled_write_P(caps_lock, false);
+    else if (is_num_lock_active()) oled_write_P(num_lock, false);
+    else oled_write_P(void_line, false);
+}
+
+bool no_anim = false;
+void suspend_power_down_user(void) {
+    // code will run multiple times while keyboard is suspended
+    no_anim = true;
+}
+
 bool oled_task_kb(void) {
     if (!oled_task_user()) {
         return false;
     }
     if (is_keyboard_master()) {
 		oled_render_layer_state();
-		render_spacer();
+        show_keystatus();
+        render_spacer();
 		oled_render_wpm();
 		render_spacer();
         oled_render_keypos();
@@ -295,8 +325,10 @@ bool oled_task_kb(void) {
         oled_render_keylog();
         render_spacer();
     } else {
-		render_anim();
-        render_wpm_graph();
+        if (!no_anim) {
+            render_anim();
+            render_wpm_graph();
+        }
     }
     return false;
 }

@@ -1,9 +1,9 @@
 #include "quantum.h"
 #include "graph.h"
 
-#define WPM_HISTORY_LENGTH 10 // Adjustable history length
+#define WPM_HISTORY_LENGTH 32 // Adjustable history length
 #define MAX_WPM 100 // Maximum WPM value for scaling
-#define GRAPH_HEIGHT 50 // Height of the graph in pixels
+#define GRAPH_HEIGHT 40 // Height of the graph in pixels
 #define OLED_HEIGHT 128
 #define OLED_WIDTH 32
 static uint8_t wpm_history[WPM_HISTORY_LENGTH] = {0};
@@ -33,8 +33,8 @@ void oled_write_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool color)
 // Function to clear the area where the WPM graph is drawn
 void clear_wpm_graph(void) {
     // Define the coordinates of the area where the graph is drawn
-    uint8_t graph_bottom = OLED_HEIGHT - 1;  // Bottom Y coordinate of the graph
-    uint8_t graph_top = graph_bottom - GRAPH_HEIGHT + 1; // Top Y coordinate of the graph
+    uint8_t graph_bottom = OLED_HEIGHT - 1; // Bottom Y coordinate of the graph
+    uint8_t graph_top = graph_bottom - GRAPH_HEIGHT; // Top Y coordinate of the graph
 
     // Loop through the specified rectangle and clear pixels to turn them off (false)
     for (uint8_t x = 0; x < OLED_WIDTH; x++) {

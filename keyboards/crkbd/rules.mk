@@ -11,5 +11,6 @@ RGB_MATRIX_SUPPORTED = yes
 RGBLIGHT_ENABLE = no
 RGB_MATRIX_ENABLE = yes
 WPM_ENABLE = yes
+LTO_ENABLE = yes  # Makes hex file smaller
 
 SRC += ./graph.c
